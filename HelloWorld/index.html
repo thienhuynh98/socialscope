@@ -1,0 +1,59 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>React Hello World</title>
+  <meta name="description" content="A hello world with react and changing text color.">
+  <meta name="author" content="Andrew Middleton">
+
+<!--  <link rel="stylesheet" href="css/styles.css"> -->
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <!-- Import React -->
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <!-- Import JSX (TODO: dev only; slow for production) -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!-- React Code -->
+  <script type="text/babel">
+
+    class Hello extends React.Component {
+
+        constructor(props) {
+            super(props);
+            this.state = {color: "#000000"};
+        }
+
+        render() {
+            return (
+                <div id="inner_wrapper">
+
+                    <h1 className="mainTitle" style={{color:this.state.color}}>
+                    Hello world!
+                    </h1>
+
+                    <button className="colorToggle" onClick={() => this.setState({color:this.get_random_color()})}>
+                    click
+                    </button>
+
+                </div>
+            );
+        }
+
+        get_random_color() {
+            var random_hex = Math.round(0xFFFFFF * Math.random()).toString(16);
+            var zero_padding = "000000".substring(0, 6 - random_hex.length);
+            return ("#" + zero_padding + random_hex);
+        }
+
+    }
+
+    ReactDOM.render(<Hello />, document.getElementById("root"));
+
+  </script>
+</body>
+</html>
