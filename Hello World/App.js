@@ -1,13 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-  const element = <h1 style={{ color: 'purple' }}>Hello world</h1>
+class Page extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { color: "black" };
+  }
+  render() {
+    return (
+      <div>
+        <div style={{ background: "#f0f0f0f" }}>
+          <h3 style={{ color: this.state.color }}>HELLO WORLD!</h3>
+        </div>
 
-    </div>
-  );
+        <div>
+          <button onClick={() => this.setState({ color: "yellow" })}>
+            {" "}
+            Yellow{" "}
+          </button>
+          <button onClick={() => this.setState({ color: "purple" })}>
+            {" "}
+            Purple{" "}
+          </button>
+          <button onClick={() => this.setState({ color: "red" })}> Red </button>
+          <button onClick={() => this.setState({ color: "green" })}>
+            {" "}
+            Green{" "}
+          </button>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default Page;
