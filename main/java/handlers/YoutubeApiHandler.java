@@ -39,7 +39,7 @@ public class YoutubeApiHandler implements IApiHandler {
 		String accessToken;
 		try {
 			accessToken =  Credentials.getapikey();
-			
+				
 		} catch (JSONException e) {
 			accessToken = null;
 		}
@@ -61,20 +61,18 @@ public JSONObject makeQuery(String q) {
 		
 		// build request properties
 		Map<String, String> requestProperties = new HashMap<>();
-		requestProperties.put("User-Agent", Credentials.getYoutubeAppUserAgent());
-		requestProperties.put("key", Credentials.getapikey());
-		
+
 		// build request parameters
 		Map<String, String> requestParameters = new HashMap<>();
+		requestParameters.put("User-Agent", Credentials.getYoutubeAppUserAgent());
+		requestParameters.put("key", Credentials.getapikey());
 		requestParameters.put("type", "video");
 		requestParameters.put("q", q);
 		requestParameters.put("limit", "10");
-		
 		// process response
 		JSONObject responseJSON = HttpUtils.executeHttpRequest(requestUri, "GET", 
 	 			requestProperties, requestParameters);
-	 	
-	 	return formatQueryJSON(responseJSON);
+	 	return responseJSON;
 		
 	}
 	
@@ -85,11 +83,12 @@ public JSONObject makeQueryVideo(String videoId) {
 		
 		// build request properties
 		Map<String, String> requestProperties = new HashMap<>();
-		requestProperties.put("User-Agent", Credentials.getYoutubeAppUserAgent());
-		requestProperties.put("key", Credentials.getapikey());
+		
 		
 		// build request parameters
 		Map<String, String> requestParameters = new HashMap<>();
+		requestParameters.put("User-Agent", Credentials.getYoutubeAppUserAgent());
+		requestParameters.put("key", Credentials.getapikey());
 		requestParameters.put("part", "snippet,topicDetails,statistics");
 		requestParameters.put("id", videoId);
 		requestParameters.put("maxResults", "5");
@@ -98,45 +97,48 @@ public JSONObject makeQueryVideo(String videoId) {
 		JSONObject responseJSON = HttpUtils.executeHttpRequest(requestUri, "GET", 
 	 			requestProperties, requestParameters);
 	 	
-	 	return formatQueryJSON(responseJSON);
+	 	return responseJSON;
 		
 	}
 	
 	
 	
-private JSONObject formatQueryJSON(JSONObject responseData) {
+public JSONObject formatQueryJSON(JSONObject responseData) {
 	
 	JSONObject outJSON = new JSONObject();
 	try {
 		
 		// ensure correct response format
-		assert(responseData.getString("kind").equals("Listing"));
 		JSONArray outPosts = new JSONArray();
-		JSONArray inPosts = responseData.getJSONObject("data").getJSONArray("children");
+		
+		JSONArray inPosts = responseData.getJSONArray("items");
+		System.out.println(inPosts);
 		
 		// populate post data fields
 		for (int i = 0; i < inPosts.length(); i++) {
-			JSONObject currentPost = inPosts.getJSONObject(i).getJSONObject("data");
-			if (currentPost.getBoolean("over_18")) continue;  // skip posts flagged for mature content
+			assert(responseData.getJSONObject("id").getString("kind").equals("youtube#video"));
+			String videoId = inPosts.getJSONObject(i).getJSONObject("id").getString("videoId");
+			JSONObject videoData = makeQueryVideo(videoId);
+			JSONArray currentPost = videoData.getJSONArray("items");
 			JSONObject postData = new JSONObject();
+			System.out.println(currentPost);
+
 			postData.put("platform", "Youtube");
-			postData.put("created_at", currentPost.getInt("created_utc"));
-			postData.put("post_id", hashPostID(currentPost.getString("name")));
-			postData.put("lang", "");
-			postData.put("title", currentPost.getString("title"));
-			postData.put("text", currentPost.getString("selftext"));
-			postData.put("poster_id", hashPoster(currentPost.getString("author_fullname")));
-			postData.put("positive_votes", currentPost.getInt("score"));
+			postData.put("created_at", currentPost.getJSONObject(i).getJSONObject("snippet").getString("publishedAt"));			
+			postData.put("post_id",hashPostID(currentPost.getJSONObject(i).getString("id")));			
+			//postData.put("lang", currentPost.getJSONObject(i).getJSONObject("snippet").getString("defaultAudioLanguage"));			
+			postData.put("title", currentPost.getJSONObject(i).getJSONObject("snippet").getString("title"));
+			postData.put("text", currentPost.getJSONObject(i).getJSONObject("snippet").getJSONObject("localized").getString("description"));
 			postData.put("sentiment_score", "Neutral");
 			postData.put("sentiment_confidence", 0.0);
-			postData.put("has_embedded_media", currentPost.get("secure_media") != JSONObject.NULL);
-			postData.put("comment_count", currentPost.getInt("num_comments"));
-			postData.put("top_comments", new JSONArray());
+			postData.put("comment_count", currentPost.getJSONObject(i).getJSONObject("statistics").getInt("commentCount"));
 			outPosts.put(postData);
+			break;
 		}
 		
 		// add post to object
 		outJSON.put("posts", outPosts);
+		System.out.println(outJSON);
 	} catch (JSONException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

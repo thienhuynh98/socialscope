@@ -10,6 +10,7 @@ public class Credentials {
 	private static final String Youtube_USER_AGENT = "SocialScope/0.1";
 	private static final String API_KEY = "AIzaSyC4oyxeg5BaxWs2LU3hsvDngZQwX6gSj0s";
 	
+	
 	public static String getRedditAppId() {
 		return REDDIT_APP_ID;
 	}
