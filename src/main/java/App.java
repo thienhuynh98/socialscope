@@ -16,15 +16,17 @@ import main.java.handlers.IApiHandler;
 import main.java.handlers.RedditApiHandler;
 import main.java.handlers.TwitterApiHandler;
 import main.java.handlers.YoutubeApiHandler;
+import main.java.util.Credentials;
 
 public class App {
 	
 	private static final int MAX_REQUEST_RETRIES = 3;
 	
-	private static List<IApiHandler> apiHandlers = new ArrayList<IApiHandler>();
+	private static List<IApiHandler> apiHandlers; ;
 	
 	public static void main(String args[]) {
-		initializeApiHandlers();
+		Credentials cred = new Credentials();
+		apiHandlers = initializeApiHandlers(cred);
 		String query = getUserQuery();
 		System.out.println("Executing search...");
 		JSONObject results = executeSearch(query);
@@ -33,10 +35,12 @@ public class App {
 		System.out.println("Done!");
 	}
 	
-	private static void initializeApiHandlers() {
-		apiHandlers.add(new RedditApiHandler());
-		apiHandlers.add(new TwitterApiHandler());
-		apiHandlers.add(new YoutubeApiHandler());
+	private static List<IApiHandler> initializeApiHandlers(Credentials cred) {
+		List<IApiHandler> handlers = new ArrayList<IApiHandler>();
+		handlers.add(new RedditApiHandler(cred.getRedditAppId(), cred.getRedditAppSecret(), cred.getRedditAppUserAgent()));
+		handlers.add(new TwitterApiHandler(cred.getTwitterAppId(), cred.getTwitterAppSecret(), cred.getTwitterAppUserAgent()));
+		handlers.add(new YoutubeApiHandler(/* paramatize necessary credentials*/));
+		return handlers;
 	}
 	
 	private static String getUserQuery() {

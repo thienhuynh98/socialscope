@@ -5,6 +5,9 @@ import org.json.JSONObject;
 public class TwitterApiHandler implements IApiHandler {
 
 	// TODO: add twitter search implementation.
+	public TwitterApiHandler(String id, String secret, String user) {
+		
+	}
 	
 	@Override
 	public void requestToken() {

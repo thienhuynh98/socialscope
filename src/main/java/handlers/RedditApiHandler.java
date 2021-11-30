@@ -11,17 +11,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import main.java.util.Credentials;
 import main.java.util.HttpUtils;
 import main.java.util.RateLimiter;
 import main.java.util.Token;
 
 public class RedditApiHandler implements IApiHandler {
 
+	private Map<String, String> credentials;
 	private Token token;
 	private List<RateLimiter> limiters = new LinkedList<>();
 
-	public RedditApiHandler() {
+	public RedditApiHandler(String id, String secret, String user) {
+		credentials = new HashMap<>();
+		credentials.put("app_id", id);
+		credentials.put("app_secret", secret);
+		credentials.put("user_agent", user);
 		this.token = null;
 		this.limiters.add(new RateLimiter(60, 60000));  // 60 requests per minute; currently unimplemented
 	}
@@ -33,8 +37,8 @@ public class RedditApiHandler implements IApiHandler {
 
 		// build request properties
 		Map<String, String> requestProperties = new HashMap<>();
-		requestProperties.put("User-Agent", Credentials.getRedditAppUserAgent());
-		String auth = Credentials.getRedditAppId() + ":" + Credentials.getRedditAppSecret();
+		requestProperties.put("User-Agent", credentials.get("user_agent"));
+		String auth = credentials.get("app_id") + ":" + credentials.get("app_secret");
 		requestProperties.put("Authorization",
 				"Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8)));
 
@@ -73,7 +77,7 @@ public class RedditApiHandler implements IApiHandler {
 		
 		// build request properties
 		Map<String, String> requestProperties = new HashMap<>();
-		requestProperties.put("User-Agent", Credentials.getRedditAppUserAgent());
+		requestProperties.put("User-Agent", credentials.get("user_agent"));
 		requestProperties.put("Authorization", "bearer " + this.token.getToken());
 		
 		// build request parameters

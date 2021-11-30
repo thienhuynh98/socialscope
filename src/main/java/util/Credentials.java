@@ -1,27 +1,108 @@
 package main.java.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Credentials {
 	
-	// reddit credentials
+	private static final String DEFAULT_CREDENTIALS_FILE = "private\\credentials.json";
 	
-	private static final String REDDIT_APP_ID = "AV79bHKhGrsMuZgmoL2chw";
-	private static final String REDDIT_APP_SECRET = "3eYG48zgNaVKoTWJcf3KTfVBin1GNQ";  // PRIVATE: must not be shared
-	private static final String REDDIT_USER_AGENT = "SocialScope/0.1 by u/SocialScopeBot";
+	private String redditAppId;
+	private String redditAppSecret;  // private
+	private String redditUserAgent;
 
-	public static String getRedditAppId() {
-		return REDDIT_APP_ID;
+	private String twitterAppId;
+	private String twitterAppSecret;  // private
+	private String twitterUserAgent;
+
+	public Credentials() {
+		readCredentialsFromFile(DEFAULT_CREDENTIALS_FILE);
 	}
 	
-	public static String getRedditAppSecret() {
-		return REDDIT_APP_SECRET;
+	private void readCredentialsFromFile(String fp) {
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(fp));
+			StringBuilder sb = new StringBuilder();
+			reader.lines().forEach((String line) -> sb.append(line));
+			reader.close();
+			JSONObject jo = new JSONObject(sb.toString());
+			this.redditAppId = jo.getString("redditAppId");
+			this.redditAppSecret = jo.getString("redditAppSecret");
+			this.redditUserAgent = jo.getString("redditUserAgent");
+			this.twitterAppId = jo.getString("twitterAppId");
+			this.twitterAppSecret = jo.getString("twitterAppSecret");
+			this.twitterUserAgent = jo.getString("twitterUserAgent");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public static String getRedditAppUserAgent() {
-		return REDDIT_USER_AGENT;
+	@SuppressWarnings("unused")
+	private void writeCredentialsToFile(String fp) {
+		// debugging method to write initial data
+		JSONObject jo = new JSONObject();
+		try {
+			jo.put("redditAppId", redditAppId);
+			jo.put("redditAppSecret", redditAppSecret);
+			jo.put("redditUserAgent", redditUserAgent);
+			jo.put("twitterAppId", twitterAppId);
+			jo.put("twitterAppSecret", twitterAppSecret);
+			jo.put("twitterUserAgent", twitterUserAgent);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fp));
+			writer.write(jo.toString());
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// reddit credentials
+	public String getRedditAppId() {
+		return redditAppId;
+	}
+	
+	public String getRedditAppSecret() {
+		return redditAppSecret;
+	}
+	
+	public String getRedditAppUserAgent() {
+		return redditUserAgent;
 	}
 	
 	// twitter credentials
-	// TODO: put any credential constants here for privacy
+	public String getTwitterAppId() {
+		return twitterAppId;
+	}
+	
+	public String getTwitterAppSecret() {
+		return twitterAppSecret;
+	}
+	
+	public String getTwitterAppUserAgent() {
+		return twitterAppSecret;
+	}
 	
 	// youtube credentials
 	// TODO: put any credential constants here for privacy
