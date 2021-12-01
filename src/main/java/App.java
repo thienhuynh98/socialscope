@@ -39,7 +39,7 @@ public class App {
 		List<IApiHandler> handlers = new ArrayList<IApiHandler>();
 		handlers.add(new RedditApiHandler(cred.getRedditAppId(), cred.getRedditAppSecret(), cred.getRedditAppUserAgent()));
 		handlers.add(new TwitterApiHandler(cred.getTwitterAppId(), cred.getTwitterAppSecret(), cred.getTwitterAppUserAgent()));
-		handlers.add(new YoutubeApiHandler(/* paramatize necessary credentials*/));
+		handlers.add(new YoutubeApiHandler(cred.getYoutubeApiKey(), cred.getYoutubeAppUserAgent()));
 		return handlers;
 	}
 	
@@ -64,6 +64,7 @@ public class App {
 		JSONObject aggregateResults = new JSONObject();
 		try {
 			JSONArray aggregatePosts = new JSONArray();
+			// get posts
 			for (IApiHandler handler : apiHandlers) {
 				int counter = 0;
 				JSONArray posts = null;
@@ -76,6 +77,10 @@ public class App {
 				for (int i = 0; i < posts.length(); i++) aggregatePosts.put(posts.get(i));
 			}
 			aggregateResults.put("posts", aggregatePosts);
+			// add metadata
+			JSONObject metaInfo = new JSONObject();
+			metaInfo.put("query", queryText);
+			aggregateResults.put("meta", metaInfo);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

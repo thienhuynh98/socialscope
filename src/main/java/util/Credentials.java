@@ -21,6 +21,8 @@ public class Credentials {
 	private String twitterAppId;
 	private String twitterAppSecret;  // private
 	private String twitterUserAgent;
+	private String youtubeUserAgent;
+	private String youtubeApiKey;  // private
 
 	public Credentials() {
 		readCredentialsFromFile(DEFAULT_CREDENTIALS_FILE);
@@ -40,6 +42,8 @@ public class Credentials {
 			this.twitterAppId = jo.getString("twitterAppId");
 			this.twitterAppSecret = jo.getString("twitterAppSecret");
 			this.twitterUserAgent = jo.getString("twitterUserAgent");
+			this.youtubeUserAgent = jo.getString("youtubeUserAgent");
+			this.youtubeApiKey = jo.getString("youtubeApiKey");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,5 +109,10 @@ public class Credentials {
 	}
 	
 	// youtube credentials
-	// TODO: put any credential constants here for privacy
+	public String getYoutubeAppUserAgent() {
+		return youtubeUserAgent;
+	}
+	public String getYoutubeApiKey() {
+		return youtubeApiKey ;
+	}
 }

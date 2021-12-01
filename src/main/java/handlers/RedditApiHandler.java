@@ -83,6 +83,7 @@ public class RedditApiHandler implements IApiHandler {
 		// build request parameters
 		Map<String, String> requestParameters = new HashMap<>();
 	 	requestParameters.put("q", q);	
+	 	requestParameters.put("t", "month");
 	 	requestParameters.put("limit", "10");
 
 	 	// process response
@@ -114,10 +115,11 @@ public class RedditApiHandler implements IApiHandler {
 				postData.put("title", currentPost.getString("title"));
 				postData.put("text", currentPost.getString("selftext"));
 				postData.put("poster_id", hashPoster(currentPost.getString("author_fullname")));
-				postData.put("positive_votes", currentPost.getInt("score"));
+				postData.put("positive_votes", currentPost.getInt("ups"));
 				postData.put("sentiment_score", "Neutral");
 				postData.put("sentiment_confidence", 0.0);
-				postData.put("has_embedded_media", currentPost.get("secure_media") != JSONObject.NULL);
+				postData.put("has_embedded_media", currentPost.get("secure_media") != JSONObject.NULL 
+						|| !currentPost.getString("url").substring(0, 22).equals("https://www.reddit.com"));
 				postData.put("comment_count", currentPost.getInt("num_comments"));
 				postData.put("top_comments", new JSONArray());
 				outPosts.put(postData);
