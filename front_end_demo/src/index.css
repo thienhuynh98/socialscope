@@ -1,0 +1,89 @@
+
+div.main-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+}
+
+div.outerWrapper {
+  margin: auto;
+  width: 600px;
+}
+
+table {
+  margin: auto;
+}
+
+div.head-flex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div.sort-text-container {
+  flex-grow: 5;
+}
+
+div.sort-button-container {
+//position: absolute;
+//left: 150px;
+  float: right;
+  display: flex;
+  flex-direction: column;
+  //align-items: center;
+  justify-content: center
+}
+
+div.sort-button-container button {
+  padding: 1px;
+  width: 21px;
+}
+
+/*  Styling partially generated at https://divtable.com/table-styler/  */
+
+table.paleBlueRows {
+  font-family: "Times New Roman", Times, serif;
+  border: 1px solid #FFFFFF;
+  width: auto;
+  height: auto;
+  width: 100%;
+  table-layout: fixed;
+  text-align: center;
+  border-collapse: collapse;
+}
+table.paleBlueRows td, table.paleBlueRows th {
+  border: 1px solid #FFFFFF;
+  padding: 3px 5px;
+}
+table.paleBlueRows tbody td {
+  font-size: 13px;
+}
+table.paleBlueRows tr.light-shade {
+  background: #EAF3FB;
+}
+table.paleBlueRows tr.dark-shade {
+  background: #C0DAF2;
+}
+table.paleBlueRows thead {
+  background: #0B6FA4;
+  border-bottom: 5px solid #FFFFFF;
+}
+table.paleBlueRows thead th {
+  align-items: center;
+  position: relative;
+  font-size: 17px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+  border-left: 2px solid #FFFFFF;
+}
+
+table.paleBlueRows thead th:first-child {
+  border-left: none;
+}
+
+table.paleBlueRows tfoot td {
+  font-size: 14px;
+}
